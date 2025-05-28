@@ -1,24 +1,23 @@
 import os
 from dotenv import load_dotenv
-from telegram import Update  # Объект, содержащий инфу кто и что написал
-from telegram.ext import ApplicationBuilder  # Создание бота
-from telegram.ext import CommandHandler  # Слушает команды (например, /start, /appointment)
-from telegram.ext import MessageHandler  # Слушает текст
-from telegram.ext import filters  # Настройка обработки сообщений (какие именно)
-from telegram.ext import ContextTypes  # Помогает хранить контекс
+from telegram import Update
+from telegram.ext import ApplicationBuilder
+from telegram.ext import CommandHandler
+from telegram.ext import MessageHandler
+from telegram.ext import filters
+from telegram.ext import ContextTypes
 from telegram.ext import ConversationHandler
-from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove  # Кнопки
+from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 
 load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 ADMIN_ID = int(os.getenv("ADMIN_ID"))
 
-# Состояния для ConversationHandler
 NAME, NUMBER = range(2) 
 
-user_data = {} # Словарь для хранения данных пользователей
+user_data = {}
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):  # ассинхр. фун-я, 
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE): 
     user_id = update.message.from_user.id
     keyboard = [
         ["📅 Записаться", "🕐 График"],
@@ -121,8 +120,6 @@ def main():
         },
         fallbacks=[CommandHandler("cancel", cancel)]
     )
-
-
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.Regex(r'^ℹ️ О нас$'), info))
     app.add_handler(MessageHandler(filters.Regex(r'^📍 Адрес$'), adress))
